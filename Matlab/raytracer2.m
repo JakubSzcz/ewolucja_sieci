@@ -22,13 +22,13 @@ numRefl = 3;
 reflCoeff = 0.5;
 wavelength = 0.12;
 
-% Inicjalizacja struktury do przechowywania wyników
-results = struct();
 runs = 12;
 RSSI = zeros(runs, size(rxPos,1));
+pepolePosMatrix = zeros(runs, 5);
 
 for run = 1:runs
     peoplePos = [rand() * roomWidth, rand() * roomHeight, 1, 1, 0];
+    pepolePosMatrix(run,:) = peoplePos;
     figure;
     hold on;
     plot([0, 0, roomWidth, roomWidth, 0], [0, roomHeight, roomHeight, 0, 0]);
@@ -38,16 +38,13 @@ for run = 1:runs
     hold off;
     xlim([-0.25 roomWidth + 0.25]);
     ylim([-0.25 roomHeight + 0.25]);
-    
+
     for i = 1:size(rxPos, 1)
-        RSSI(i) = calcLoss(txPos, rxPos(i, :), peoplePos, ...
+        RSSI(run,i) = calcLoss(txPos, rxPos(i, :), peoplePos, ...
             roomHeight, roomWidth, numRefl, reflCoeff, wavelength);
         disp("RSSI" + i + ": " + RSSI(i));
-        results.(sprintf('RSSI%d', i))(run) = RSSI(i);
     end
     disp("------------------");
-   
-    
-    results.(['PeoplePos' num2str(run)]) = peoplePos;
-end 
-save('results.mat', '-struct', 'results');
+
+end
+save('results.mat');
