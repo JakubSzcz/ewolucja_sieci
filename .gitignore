@@ -8,6 +8,7 @@
 pyvenv.cfg
 .venv
 pip-selfcheck.json
+.idea/misc.xml
 
 ./idea
 # Created by .ignore support plugin (hsz.mobi)
@@ -16,7 +17,6 @@ pip-selfcheck.json
 __pycache__/
 *.py[cod]
 *$py.class
-.idea/misc.xml
 .idea
 .idea/
 .idea/*
