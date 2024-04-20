@@ -1,4 +1,4 @@
-# ewolucja_sieci
+# Project
 python -m venv venv
 .\venv\Scripts\activate
 
