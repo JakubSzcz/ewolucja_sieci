@@ -16,7 +16,10 @@ pip-selfcheck.json
 __pycache__/
 *.py[cod]
 *$py.class
+.idea/misc.xml
 .idea
+.idea/
+.idea/*
 # C extensions
 *.so
 
