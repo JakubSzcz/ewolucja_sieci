@@ -1,50 +1,60 @@
 clearvars; close all;
 
-testRx = [2, 3, 0];%x,y,0
+people1 = false;
+people2 = true;
 
-testPeople = [1, 2, 3, 4, 0]; %x,y,w,h,0
+params;
 
-txPos = [2.5, 2.5];
-rxPos = [0.1, 0.1, 0;...
-         0.1, 2.5, 0;...
-         0.1, 4.9, 0;...
-         2.5, 4.9, 0;...
-         4.9, 4.9, 0;...
-         4.9, 2.5, 0;...
-         4.9, 0.1, 0;...
-         2.5, 0.1, 0];
+offset = 0.1;
+x_ind = offset : 0.1 : roomWidth - offset;
+y_ind = offset : 0.1 : roomWidth - offset;
 
-%peoplePos = [3, 1, 1, 1, 0];
-
-roomHeight = 5;
-roomWidth = 5;
-numRefl = 3;
-reflCoeff = 0.5;
-wavelength = 0.12;
-
-runs = 12;
-RSSI = zeros(runs, size(rxPos,1));
-pepolePosMatrix = zeros(runs, 5);
-
-for run = 1:runs
-    peoplePos = [rand() * roomWidth, rand() * roomHeight, 1, 1, 0];
-    pepolePosMatrix(run,:) = peoplePos;
-    figure;
-    hold on;
-    plot([0, 0, roomWidth, roomWidth, 0], [0, roomHeight, roomHeight, 0, 0]);
-    plot(txPos(1), txPos(2), "x", "Color", "r");
-    plot(rxPos(:, 1), rxPos(:, 2), "x", "Color", "b");
-    plot(peoplePos(1), peoplePos(2), "o", "Color", "g");
-    hold off;
-    xlim([-0.25 roomWidth + 0.25]);
-    ylim([-0.25 roomHeight + 0.25]);
-
-    for i = 1:size(rxPos, 1)
-        RSSI(run,i) = calcLoss(txPos, rxPos(i, :), peoplePos, ...
-            roomHeight, roomWidth, numRefl, reflCoeff, wavelength);
-        disp("RSSI" + i + ": " + RSSI(i));
+if people1
+    % 1 person
+    RSSI1 = zeros(length(y_ind), length(x_ind), size(rxPos, 1));
+    
+    iter = 1;
+    number = length(y_ind) * length(x_ind);
+    for x = 1 : length(x_ind)
+        clc;
+        disp("people 1: " + iter + " / " + number);
+        for y = 1 : length(y_ind)
+            % loop through rx antennae
+            for i = 1:size(rxPos, 1)
+                RSSI1(y, x, i) = calcLoss(txPos, rxPos(i, :), [x_ind(x), y_ind(y), person_width, person_width, 0], ...
+                    roomHeight, roomWidth, numRefl, reflCoeff, wavelength);
+            end
+            iter = iter + 1;
+        end
     end
-    disp("------------------");
-
+save("people1.mat", "RSSI1", "y_ind", "x_ind");
 end
-save('results.mat');
+
+if people2
+    % 2 people
+    RSSI2 = zeros(length(y_ind), length(x_ind), ...
+        length(y_ind), length(x_ind), size(rxPos, 1));
+
+    iter = 1;
+    number = (length(y_ind) * length(x_ind))^2;
+    
+    for x1 = 1 : length(x_ind)
+        for y1 = 1 : length(y_ind)
+            for x2 = 1 : length(x_ind)
+                clc;
+                disp("people 2: " + iter + " / " + number);
+                for y2 = 1 : length(y_ind)
+                    % loop through rx antennae
+                    for i = 1:size(rxPos, 1)
+                        people = [x_ind(x1), y_ind(y1), person_width, person_width, 0;...
+                                  x_ind(x2), y_ind(y2), person_width, person_width, 0];
+                        RSSI2(y1, x1, y2, x2, i) = calcLoss(txPos, rxPos(i, :), people, ...
+                            roomHeight, roomWidth, numRefl, reflCoeff, wavelength);
+                    end
+                    iter = iter + 1;
+                end
+            end
+        end
+    end
+    save("people1.mat", "RSSI2", "y_ind", "x_ind");
+end
