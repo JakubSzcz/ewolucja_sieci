@@ -16,6 +16,15 @@
 
 function result = wektorsektor (ax, ay, bx, by, cx, cy, w, h) ;
 
+if(w<0)
+    cx = cx + w;
+    w = w .* -1;
+end
+if(h<0)
+    cy = cy + h;
+    h = h .* -1;
+end
+
 result = -1 ;
 if dwawektory (ax, ay, bx, by, cx, cy, cx+w, cy) ~= -1
     result = result+1 ;
