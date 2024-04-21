@@ -1,8 +1,5 @@
-function signal = calcLossbackup(txPos, rxPos, peoplePos, roomHeight, roomWidth, numRefl, reflCoeff, wavelength)
+function signal = calcLoss(txPos, rxPos, peoplePos, roomHeight, roomWidth, numRefl, reflCoeff, wavelength)
     signal = 0;
-    if(rxPos == [3.5, 2.5, 0])
-        disp("d00pa")
-    end
     for rxPoint = expandRx(rxPos, roomHeight, roomWidth, numRefl)' %dla kazdej sciezki
     %rxPoint = rxPos;
         rxPoint = rxPoint';
@@ -16,7 +13,7 @@ function signal = calcLossbackup(txPos, rxPos, peoplePos, roomHeight, roomWidth,
          end
         dist = sqrt((txPos(1) - rxPoint(1)).^2 + (txPos(2) - rxPoint(2)).^2);
         phi = mod(dist, wavelength)*2*pi;
-        loss = ((wavelength/(4*pi*dist)).^2).*(reflCoeff);%(wavelength/(4*pi*dist)).^2;
+        loss = ((wavelength/(4*pi*dist)).^2).*(reflCoeff.^rxPoint(3));%(wavelength/(4*pi*dist)).^2;
         if sumObstacles > 0
             loss = 0;
         end
