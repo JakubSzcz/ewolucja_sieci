@@ -1,7 +1,7 @@
 clearvars; close all;
 
-nr_people = 5;
-nr_samples = 1000;
+nr_people = 1;
+nr_samples = 100000;
 
 params;
 
