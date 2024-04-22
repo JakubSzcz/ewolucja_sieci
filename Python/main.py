@@ -1,12 +1,18 @@
+import os
+
 import numpy as np
 import scipy.io
-from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
+from tensorflow.keras.models import Sequential
 
 # load data
-mat = scipy.io.loadmat("../Matlab/results.mat")
+dir_path = os.getcwd()
+mat = scipy.io.loadmat(fr"{dir_path}/Matlab/training_set.mat")
 rssi_values_matrix = np.array(mat['RSSI'], dtype=np.double)
-people_position = np.array(mat['pepolePosMatrix'], dtype=np.double)[:, :2]
+people_position = np.array(mat['positions'], dtype=np.double)[:, :2]
+
+print(rssi_values_matrix)
+print(people_position)
 
 # implement Keras model
 model = Sequential()
