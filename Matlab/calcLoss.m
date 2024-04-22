@@ -23,7 +23,7 @@ function signal = calcLoss(txPos, rxPos, peoplePos, roomHeight, roomWidth, numRe
 
 function expandedTotal = expandRx(rxPos, roomHeight, roomWidth, numRefl)
     expandedUp = moveOneUpRx(rxPos, rxPos, roomHeight, numRefl);
-    expandedUpAndRight = moveOneRightRx([expandedUp, zeros(length(expandedUp),1)], [expandedUp, zeros(length(expandedUp),1)], roomWidth, numRefl);
+    expandedUpAndRight = moveOneRightRx([expandedUp, zeros(length(expandedUp(:,1)),1)], [expandedUp, zeros(length(expandedUp(:,1)),1)], roomWidth, numRefl);
 
     expandedDown = expandedUpAndRight(1:end-1,:);
     expandedDown(:, 2) = expandedDown(:,2) .* -1; %odbicie względem osx
@@ -57,7 +57,7 @@ end
 
 function expandedTotal = expandPeople(peoplePos, roomHeight, roomWidth, numRefl)
     expandedUp = moveOneUpPeople(peoplePos, peoplePos, roomHeight, numRefl);
-    expandedUpAndRight = moveOneRightPeople([expandedUp, zeros(length(expandedUp),1)], [expandedUp, zeros(length(expandedUp),1)], roomWidth, numRefl);
+    expandedUpAndRight = moveOneRightPeople([expandedUp, zeros(length(expandedUp(:,1)),1)], [expandedUp, zeros(length(expandedUp(:,1)),1)], roomWidth, numRefl);
 
     expandedDown = expandedUpAndRight;
     expandedDown(:, 2) = expandedDown(:,2) .* -1; %odbicie względem osx
