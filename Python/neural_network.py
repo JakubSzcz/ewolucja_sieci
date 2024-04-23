@@ -11,7 +11,7 @@ from sklearn.model_selection import train_test_split
 dir_path = os.getcwd()
 # mat = scipy.io.loadmat(fr"{dir_path}/Matlab/people10000_person.mat")
 mat = scipy.io.loadmat("../Matlab/people1000000_person.mat")
-checkpoint_filepath = '../models/regression/checkpoint.model_1M.keras'
+checkpoint_filepath = '../models/neuralNetwork/checkpoint.model_1M.keras'
 
 # extract data
 rssi_values_matrix_complex = np.array(mat['RSSI'], dtype=np.complex_)
@@ -75,4 +75,4 @@ mae = tf.keras.losses.mean_absolute_error(y_val, y_pred).numpy()
 print("Mean Absolute Error:", mae)
 
 # save model
-model.save('../models/model_1M.keras')
+model.save('../models/neuralNetwork/model_1M.keras')

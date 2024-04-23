@@ -97,4 +97,4 @@ accuracy_rf = accuracy_score(y_test, y_pred_rf)
 print("Random Forest Accuracy:", accuracy_rf)
 
 # Save the best Random Forest estimator to a file
-joblib.dump(best_rf, '../forest/random_forest_estimator.joblib')
+joblib.dump(best_rf, '../models/forest/random_forest_estimator.joblib')

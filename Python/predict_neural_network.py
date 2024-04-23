@@ -3,7 +3,7 @@ import numpy as np
 import tensorflow as tf
 
 # Load the trained model
-model = tf.keras.models.load_model('../models/model_1M.keras')
+model = tf.keras.models.load_model('../models/neuralNetwork/model_1M.keras')
 
 
 def preprocess_input(args):
