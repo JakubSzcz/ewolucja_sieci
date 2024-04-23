@@ -1,16 +1,15 @@
 import os
+
 import numpy as np
 import scipy.io
 import tensorflow as tf
-
-from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
-
+from sklearn.preprocessing import StandardScaler
 
 # load data
 dir_path = os.getcwd()
-# mat = scipy.io.loadmat(fr"{dir_path}/Matlab/people10000_person.mat")
-mat = scipy.io.loadmat("../Matlab/people10000_person.mat")
+#mat = scipy.io.loadmat(fr"{dir_path}/Matlab/10000_person_3.mat")
+mat = scipy.io.loadmat("../Matlab/10000_person_3.mat")
 rssi_values_matrix_complex = np.array(mat['RSSI'], dtype=np.complex_)
 rssi_values_matrix_real = np.absolute(rssi_values_matrix_complex, dtype=np.double)
 
