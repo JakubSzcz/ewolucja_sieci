@@ -16,6 +16,7 @@ num_classes = 9
 square_width = room_width / 3
 square_height = room_height / 3
 
+
 def get_class(predicted_class):
     if predicted_class == 0:
         return 2, 0
@@ -35,6 +36,7 @@ def get_class(predicted_class):
         return 1, 2
     if predicted_class == 8:
         return 0, 2
+
 
 # Function to plot the room with highlighted predicted class and save as an image file
 def save_room_plot(predicted_class, filename):
@@ -71,6 +73,7 @@ def save_room_plot(predicted_class, filename):
     plt.savefig(filename)
     plt.close()
 
+
 # Function to predict top 3 classes and their probabilities
 def predict_top3_classes(input_data):
     # Make prediction probabilities
@@ -85,6 +88,7 @@ def predict_top3_classes(input_data):
 
     return top3_classes, top3_probs
 
+
 # Function to predict class based on 8 RSSI values
 def predict_class(rssi_values):
     # Ensure input is a numpy array
@@ -94,6 +98,7 @@ def predict_class(rssi_values):
     # Predict class
     predicted_class = best_rf.predict(rssi_values)
     return predicted_class[0]
+
 
 # Example usage
 if __name__ == "__main__":

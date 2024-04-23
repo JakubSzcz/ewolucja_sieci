@@ -8,7 +8,6 @@ from sklearn.ensemble import RandomForestClassifier
 import joblib
 
 # Load data
-# Load data
 mat = scipy.io.loadmat("../Matlab/people10000_person.mat")
 rssi_values_matrix_complex = np.array(mat['RSSI'], dtype=np.complex_)
 rssi_values_matrix = np.absolute(rssi_values_matrix_complex, dtype=np.double)
