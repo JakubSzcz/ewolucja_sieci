@@ -1,22 +1,28 @@
-function signal = calcLoss(txPos, rxPos, peoplePos, roomHeight, roomWidth, numRefl, reflCoeff, wavelength)
+function signal = calcLoss(txPos, rxPos, peoplePos, furniturePos, roomHeight, roomWidth, numRefl, reflCoeff, personTransmissionCoef, furnitureTransmissionCoeff, wavelength)
     signal = 0;
     for rxPoint = expandRx(rxPos, roomHeight, roomWidth, numRefl)' %dla kazdej sciezki
     %rxPoint = rxPos;
         rxPoint = rxPoint';
-        sumObstacles = 0;
-         for person = expandPeople(peoplePos, roomHeight, roomWidth, numRefl)' %dla każdego odbicia sprawdź czy przecina ono daną ścieżkę
-             person = person';
+        sumPeopleOnPath = 0;
+        sumFurnitureOnPath = 0;
+        for person = expandPeople(peoplePos, roomHeight, roomWidth, numRefl)' %dla każdego odbicia sprawdź czy przecina ono daną ścieżkę
+            person = person';
+            %person = peoplePos;
+            if wektorsektor(txPos(1), txPos(2), rxPoint(1), rxPoint(2), person(1), person(2), person(3), person(4)) >= 0
+                sumPeopleOnPath = sumPeopleOnPath + 1;
+            end
+        end
+         for object = expandPeople(furniturePos, roomHeight, roomWidth, numRefl)' %dla każdego odbicia sprawdź czy przecina ono daną ścieżkę
+             object = object';
              %person = peoplePos;
-             if wektorsektor(txPos(1), txPos(2), rxPoint(1), rxPoint(2), person(1), person(2), person(3), person(4)) >= 0
-                 sumObstacles = sumObstacles + 1;
+             if wektorsektor(txPos(1), txPos(2), rxPoint(1), rxPoint(2), object(1), object(2), object(3), object(4)) >= 0
+                 sumFurnitureOnPath = sumFurnitureOnPath + 1;
              end
          end
         dist = sqrt((txPos(1) - rxPoint(1)).^2 + (txPos(2) - rxPoint(2)).^2);
         phi = mod(dist, wavelength)*2*pi;
         loss = ((wavelength/(4*pi*dist)).^2).*(reflCoeff.^rxPoint(3));%(wavelength/(4*pi*dist)).^2;
-        if sumObstacles > 0
-            loss = 0;
-        end
+        loss = loss * (personTransmissionCoef.^sumPeopleOnPath) * (furnitureTransmissionCoeff.^sumFurnitureOnPath);
         signal = signal + loss*exp(i*phi);
      end
  end
@@ -134,6 +140,9 @@ function finalArray = moveOneUpPeople(originalArray, firstArray, roomHeight, num
     newArray = [];
     for idx = 1:length(firstArray(:, 1))%for each point in the current room
         point = originalArray(idx, :);
+        if length(point) < 2
+            disp("d00pa")
+        end
         if point(5) < numRefl %if reflections are left
             if mod(point(end), 2) == 1 %If point is odd
                 newArray = cat(1, newArray, ([point(1), point(2)+2*firstArray(idx, 2), point(3), point(4).*-1, point(5)+1]));

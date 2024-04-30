@@ -2,14 +2,13 @@ clearvars; close all;
 
 params;
 
-peoplePos = [3, 2, person_width, person_width, 0;...
-             3, 1,person_width, person_width, 0;...
-             2.2, 2.5, person_width, person_width, 0];
+peoplePos = [3, 2, person_width, person_width, 0];
+furniturePos = [1, 2, person_width, person_width, 0];
 
 for x = 1:roomWidth * 10
     for y = 1:roomHeight * 10
-        map(y, x) = calcLoss(txPos, [x/10, y/10, 0], peoplePos, ...
-            roomHeight, roomWidth, numRefl, reflCoeff, wavelength);
+        map(y, x) = calcLoss(txPos, [x/10, y/10, 0], peoplePos, furniturePos, ...
+            roomHeight, roomWidth, numRefl, reflCoeff, 0.5, 0.1, wavelength);
     end
 end
 figure;
@@ -26,7 +25,7 @@ xlabel("X");
 ylabel("Y");
 
 for i = 1:size(rxPos, 1)
-    RSSI(i) = calcLoss(txPos, rxPos(i, :), peoplePos, ...
-        roomHeight, roomWidth, numRefl, reflCoeff, wavelength);
-    disp("RSSI" + i + ": " + RSSI(i));
+    RSSI(i) = calcLoss(txPos, rxPos(i, :), peoplePos, furniturePos,...
+        roomHeight, roomWidth, numRefl, reflCoeff, 0.9, 0.1, wavelength);
+    disp("RSSI" + i + ": " + log(abs(RSSI(i))));
 end
