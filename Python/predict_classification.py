@@ -1,20 +1,10 @@
-import numpy as np
 import joblib
 import matplotlib.pyplot as plt
 
+from utilities import *
+
 # Load the saved Random Forest model
-best_rf = joblib.load('../models/forest/random_forest_estimator.joblib')
-
-# Define room dimensions
-room_width = 5
-room_height = 5
-
-# Define number of classes
-num_classes = 9
-
-# Calculate square width and height
-square_width = room_width / 3
-square_height = room_height / 3
+model = joblib.load(MODEL_NAME_RANDOM_FOREST)
 
 
 def get_class(predicted_class):
@@ -48,16 +38,16 @@ def save_room_plot(predicted_class, filename):
 
     # Plot the room grid
     plt.figure(figsize=(8, 6))
-    plt.imshow(room_grid, cmap='Blues', extent=[0, room_width, 0, room_height], alpha=0.5, vmin=0, vmax=1)
+    plt.imshow(room_grid, cmap='Blues', extent=[0, ROOM_WIDTH, 0, ROOM_HEIGHT], alpha=0.5, vmin=0, vmax=1)
 
     # Plot grid lines
     for i in range(1, 3):
-        plt.axvline(i * square_width, color='k', linestyle='--')
-        plt.axhline(i * square_height, color='k', linestyle='--')
+        plt.axvline(i * SQUARE_WIDTH, color='k', linestyle='--')
+        plt.axhline(i * SQUARE_HEIGHT, color='k', linestyle='--')
 
     # Calculate text position
-    text_y = (predicted_class % 3 + 0.5) * square_width
-    text_x = (predicted_class // 3 + 0.5) * square_height  # Invert the row index to match plot coordinates
+    text_y = (predicted_class % 3 + 0.5) * SQUARE_WIDTH
+    text_x = (predicted_class // 3 + 0.5) * SQUARE_HEIGHT  # Invert the row index to match plot coordinates
     # Plot class label at the center of the highlighted square
     plt.text(text_x, text_y, f'Class {predicted_class}', ha='center', va='center', fontsize=12, color='red')
 
@@ -65,8 +55,8 @@ def save_room_plot(predicted_class, filename):
     plt.title('Room with Highlighted Predicted Class')
     plt.xlabel('X-coordinate')
     plt.ylabel('Y-coordinate')
-    plt.xlim(0, room_width)
-    plt.ylim(0, room_height)
+    plt.xlim(0, ROOM_WIDTH)
+    plt.ylim(0, ROOM_HEIGHT)
     plt.grid(True)
 
     # Save the plot as an image file
@@ -77,7 +67,7 @@ def save_room_plot(predicted_class, filename):
 # Function to predict top 3 classes and their probabilities
 def predict_top3_classes(input_data):
     # Make prediction probabilities
-    predicted_probs = best_rf.predict_proba([input_data])[0]
+    predicted_probs = model.predict_proba([input_data])[0]
 
     # Get indices of top 3 classes based on predicted probabilities
     top3_indices = np.argsort(predicted_probs)[-3:][::-1]
@@ -87,17 +77,6 @@ def predict_top3_classes(input_data):
     top3_probs = predicted_probs[top3_indices]
 
     return top3_classes, top3_probs
-
-
-# Function to predict class based on 8 RSSI values
-def predict_class(rssi_values):
-    # Ensure input is a numpy array
-    rssi_values = np.array(rssi_values)
-    # Reshape to match the input format expected by the model
-    rssi_values = rssi_values.reshape(1, -1)
-    # Predict class
-    predicted_class = best_rf.predict(rssi_values)
-    return predicted_class[0]
 
 
 # Example usage
@@ -116,6 +95,6 @@ if __name__ == "__main__":
             print("Error: Input values must be numeric.")
 
     # Predict class
-    predicted_class = predict_class(rssi_values)
-    print("Predicted class:", predicted_class)
-    save_room_plot(predicted_class, 'predicted_room_plot.png')
+    predicted_class_number = predict_class(rssi_values, model)
+    print("Predicted class:", predicted_class_number)
+    save_room_plot(predicted_class_number, 'predicted_room_plot.png')

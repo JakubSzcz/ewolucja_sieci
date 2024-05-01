@@ -1,32 +1,16 @@
-import numpy as np
-import scipy.io
 import matplotlib.pyplot as plt
-from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.ensemble import RandomForestClassifier
+from utilities import *
 import joblib
 
-# Load data
-mat = scipy.io.loadmat("../Matlab/people10000_person.mat")
-rssi_values_matrix_complex = np.array(mat['RSSI'], dtype=np.complex_)
-rssi_values_matrix = np.absolute(rssi_values_matrix_complex, dtype=np.double)
-people_position = np.array(mat['positions'], dtype=np.double)[:, :2]
-
-# Define room dimensions
-room_width = 5
-room_height = 5
-
-# Define number of classes
-num_classes = 9
-
-# Calculate square width and height
-square_width = room_width / 3
-square_height = room_height / 3
+# loads data
+rssi_values_matrix, people_position = load_data(DATA_SET_NAME)
 
 # Calculate row and column indices for each position
-row_indices = np.floor(people_position[:, 0] / square_width).astype(int)
-col_indices = np.floor(people_position[:, 1] / square_height).astype(int)
+row_indices = np.floor(people_position[:, 0] / SQUARE_WIDTH).astype(int)
+col_indices = np.floor(people_position[:, 1] / SQUARE_HEIGHT).astype(int)
 
 # Create class labels based on row and column indices
 class_labels = row_indices * 3 + col_indices
@@ -36,11 +20,11 @@ plt.figure(figsize=(8, 6))
 
 # Plotting room grid
 for i in range(1, 3):
-    plt.axvline(x=i * square_width, color='k', linestyle='--')
-    plt.axhline(y=i * square_height, color='k', linestyle='--')
+    plt.axvline(x=i * SQUARE_WIDTH, color='k', linestyle='--')
+    plt.axhline(y=i * SQUARE_HEIGHT, color='k', linestyle='--')
 
 # Plotting all 9 classes (even if some are not present in the first 100 positions)
-for label in range(num_classes):
+for label in range(NUM_CLASSES):
     plt.scatter([], [], label=f'Class {label}', color=f'C{label}', marker='o', s=100)
 
 # Plotting people's positions
@@ -53,8 +37,8 @@ plt.legend(title='Class', bbox_to_anchor=(1.05, 1), loc='upper left')
 plt.title('Room with 9 Classes and People\'s Positions (First 100)')
 plt.xlabel('X-coordinate')
 plt.ylabel('Y-coordinate')
-plt.xlim(0, room_width)
-plt.ylim(0, room_height)
+plt.xlim(0, ROOM_WIDTH)
+plt.ylim(0, ROOM_HEIGHT)
 plt.grid(True)
 
 # Save the plot as an image file
@@ -70,7 +54,7 @@ rssi_values_flat = rssi_values_matrix.reshape(rssi_values_matrix.shape[0], -1)
 # Splitting the data into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(rssi_values_flat, class_labels, test_size=0.2, random_state=42)
 
-## Initialize the Random Forest classifier
+# Initialize the Random Forest classifier
 clf_rf = RandomForestClassifier(random_state=42)
 
 # Define hyperparameters grid for grid search

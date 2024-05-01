@@ -1,25 +1,12 @@
-import numpy as np
 import joblib
 import matplotlib.pyplot as plt
-import scipy.io
-
-from predict_classification import predict_class
+from utilities import *
 
 # Load the saved Random Forest model
-best_rf = joblib.load('../models/forest/random_forest_estimator.joblib')
+model = joblib.load(MODEL_NAME_RANDOM_FOREST)
 
 # Load data
-mat = scipy.io.loadmat("../Matlab/people.mat")
-rssi_values_matrix_complex = np.array(mat['RSSI'], dtype=np.complex_)
-rssi_values_matrix = np.absolute(rssi_values_matrix_complex, dtype=np.double)
-people_position = np.array(mat['positions'], dtype=np.double)[:, :2]
-
-# constants
-ROOM_WIDTH = 5
-ROOM_HEIGHT = 5
-NUM_CLASSES = 9
-SQUARE_WIDTH = ROOM_WIDTH / 3
-SQUARE_HEIGHT = ROOM_HEIGHT / 3
+rssi_values_matrix, people_position = load_data(DATA_SET_NAME)
 
 
 def slot_on_axis(x, axis_len, slots):
@@ -40,21 +27,17 @@ def slot_on_axis(x, axis_len, slots):
 
 # translate X,Y cords for class number
 def cluster_from_position(x, y):
-    cluster_col = slot_on_axis(y, ROOM_WIDTH, NUM_CLASSES ** 0.5)
-    cluster_row = slot_on_axis(x, ROOM_HEIGHT, NUM_CLASSES ** 0.5)
-
-    cluster_number = (cluster_row * NUM_CLASSES ** 0.5) + cluster_col
-
+    cluster_col_ = slot_on_axis(y, ROOM_WIDTH, NUM_CLASSES ** 0.5)
+    cluster_row_ = slot_on_axis(x, ROOM_HEIGHT, NUM_CLASSES ** 0.5)
+    cluster_number = (cluster_row_ * NUM_CLASSES ** 0.5) + cluster_col_
     return int(cluster_number)
 
 
 # translate list cords for class number
 def cluster_from_position_from_list(cords_list):
-    cluster_col = slot_on_axis(cords_list[1], ROOM_WIDTH, NUM_CLASSES ** 0.5)
-    cluster_row = slot_on_axis(cords_list[0], ROOM_HEIGHT, NUM_CLASSES ** 0.5)
-
-    cluster_number = (cluster_row * NUM_CLASSES ** 0.5) + cluster_col
-
+    cluster_col_ = slot_on_axis(cords_list[1], ROOM_WIDTH, NUM_CLASSES ** 0.5)
+    cluster_row_ = slot_on_axis(cords_list[0], ROOM_HEIGHT, NUM_CLASSES ** 0.5)
+    cluster_number = (cluster_row_ * NUM_CLASSES ** 0.5) + cluster_col_
     return int(cluster_number)
 
 
@@ -63,7 +46,7 @@ people_position_cluster = np.apply_along_axis(cluster_from_position_from_list, a
 people_position_color = list()
 
 for index, rssi_row in enumerate(rssi_values_matrix):
-    predicted_cluster = predict_class(rssi_row)
+    predicted_cluster = predict_class(rssi_row, model)
 
     if predicted_cluster == people_position_cluster[index]:
         people_position_color.append("g")
@@ -126,4 +109,3 @@ for index, cluster in enumerate(people_position_cluster):
 for label in range(NUM_CLASSES):
     accuracy = (labels_green_count[label] / labels_all_count[label]) * 100 if labels_all_count[label] != 0 else 0
     print("\tAccuracy for cluster " + str(label) + ": " + str(round(accuracy, 2)) + "%.")
-
