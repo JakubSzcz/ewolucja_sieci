@@ -8,8 +8,9 @@ ROOM_HEIGHT = 5
 NUM_CLASSES = 9
 SQUARE_WIDTH = ROOM_WIDTH / 3
 SQUARE_HEIGHT = ROOM_HEIGHT / 3
-DATA_SET_NAME = "../dataSets/valid/k=6,n=20k.mat"
-MODEL_NAME_RANDOM_FOREST = '../models/forest/RF_k=6_n=3k.joblib'
+NUMBER_OF_REFLECTIONS = 6
+DATA_SET_NAME = f"../dataSets/valid/k={NUMBER_OF_REFLECTIONS},n=20k.mat"
+MODEL_NAME_RANDOM_FOREST = f"../models/forest/RF_k={NUMBER_OF_REFLECTIONS}_n=3k.joblib"
 MODEL_NAME_RANDOM_NEURAL_NETWORK = ""
 
 
@@ -40,7 +41,7 @@ def load_data(data_set_name: str) -> (np.array, np.array):
 # RANDOM FOREST FUNCTIONS
 def predict_class(rssi_values: np.array, random_forest_model):
     """
-    Loads generated dataset from .mat file
+    Predicts cluster number based on the provided rssi_values
 
     Parameters
     ----------

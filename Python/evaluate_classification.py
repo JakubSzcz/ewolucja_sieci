@@ -1,7 +1,9 @@
 import joblib
 import matplotlib.pyplot as plt
+import time
 from utilities import *
 
+start_time = time.time()
 print("[LOG] Loading model...")
 # Load the saved Random Forest model
 model = joblib.load(MODEL_NAME_RANDOM_FOREST)
@@ -106,7 +108,12 @@ print("[LOG] Printing results done.")
 
 # print statistic
 print("####################################\nSTATISTICS\n####################################")
-print("\tTotal modal accuracy: " +
+print("\tModel used: " + MODEL_NAME_RANDOM_FOREST.split("/")[-1] + ".")
+print("\tDataset used: " + DATA_SET_NAME.split("/")[-1] + ".")
+print("\tNumber of reflections parameter value: " + str(NUMBER_OF_REFLECTIONS) + ".")
+print("\tDataset size: " + str(rssi_values_matrix.shape[0]) + ".")
+print("\tTotal evaluation time : " + str((time.time() - start_time)*10**6) + " s.")
+print("\tTotal model accuracy: " +
       str(round(100 * people_position_color.count("g") / len(people_position_color), 2)) + "%.")
 
 # Initialize counts for green predictions and total counts for each label
