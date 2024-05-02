@@ -8,8 +8,8 @@ ROOM_HEIGHT = 5
 NUM_CLASSES = 9
 SQUARE_WIDTH = ROOM_WIDTH / 3
 SQUARE_HEIGHT = ROOM_HEIGHT / 3
-DATA_SET_NAME = "../Matlab/people10000_person.mat"
-MODEL_NAME_RANDOM_FOREST = '../models/forest/random_forest_estimator.joblib'
+DATA_SET_NAME = "../dataSets/valid/k=6,n=20k.mat"
+MODEL_NAME_RANDOM_FOREST = '../models/forest/RF_k=6_n=3k.joblib'
 MODEL_NAME_RANDOM_NEURAL_NETWORK = ""
 
 

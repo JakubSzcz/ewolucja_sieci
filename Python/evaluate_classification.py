@@ -2,11 +2,15 @@ import joblib
 import matplotlib.pyplot as plt
 from utilities import *
 
+print("[LOG] Loading model...")
 # Load the saved Random Forest model
 model = joblib.load(MODEL_NAME_RANDOM_FOREST)
+print("[LOG] Model loaded.")
 
+print("[LOG] Loading dataset...")
 # Load data
 rssi_values_matrix, people_position = load_data(DATA_SET_NAME)
+print("[LOG] Dataset loaded.")
 
 
 def slot_on_axis(x, axis_len, slots):
@@ -41,18 +45,25 @@ def cluster_from_position_from_list(cords_list):
     return int(cluster_number)
 
 
+print("[LOG] Preparing model...")
 # evaluate the model
 people_position_cluster = np.apply_along_axis(cluster_from_position_from_list, axis=1, arr=people_position)
 people_position_color = list()
+print("[LOG] Model prepared.")
 
+print("[LOG] Evaluating model...")
 for index, rssi_row in enumerate(rssi_values_matrix):
+    if index % 100 == 0:
+        print("[LOG] " + str(index) + "/" + str(people_position_cluster.shape[0]) + " samples processed.")
     predicted_cluster = predict_class(rssi_row, model)
 
     if predicted_cluster == people_position_cluster[index]:
         people_position_color.append("g")
     else:
         people_position_color.append("r")
+print("[LOG] Evaluating model done.")
 
+print("[LOG] Printing predictions results...")
 # print results
 plt.figure(figsize=(8, 6))
 
@@ -72,6 +83,8 @@ for i in range(NUM_CLASSES):
 # Plotting people's positions
 for index, position in enumerate(people_position):
     plt.scatter(position[0], position[1], color=people_position_color[index])
+    if index % 100 == 0:
+        print("[LOG] " + str(index) + "/" + str(people_position.shape[0]) + " samples printed.")
 
 plt.title('How well model predicted output for each cluster (green- valid prediction)')
 plt.xlabel('X-coordinate')
@@ -89,6 +102,7 @@ plt.legend(handles=legend_handles, title='Clusters', bbox_to_anchor=(1.05, 1), l
 plt.tight_layout()
 plt.savefig('model_evaluation.png')
 plt.close()
+print("[LOG] Printing results done.")
 
 # print statistic
 print("####################################\nSTATISTICS\n####################################")
