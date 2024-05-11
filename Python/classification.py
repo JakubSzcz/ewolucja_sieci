@@ -13,17 +13,17 @@ row_indices = np.floor(people_position[:, 0] / SQUARE_WIDTH).astype(int)
 col_indices = np.floor(people_position[:, 1] / SQUARE_HEIGHT).astype(int)
 
 # Create class labels based on row and column indices
-class_labels = row_indices * 3 + col_indices
+class_labels = row_indices * int(NUM_CLASSES ** 0.5) + col_indices
 
 # Plotting the room with class labels and people's positions
 plt.figure(figsize=(8, 6))
 
 # Plotting room grid
-for i in range(1, 3):
+for i in range(1, int(NUM_CLASSES ** 0.5)):
     plt.axvline(x=i * SQUARE_WIDTH, color='k', linestyle='--')
     plt.axhline(y=i * SQUARE_HEIGHT, color='k', linestyle='--')
 
-# Plotting all 9 classes (even if some are not present in the first 100 positions)
+# Plotting all  classes (even if some are not present in the first 100 positions)
 for label in range(NUM_CLASSES):
     plt.scatter([], [], label=f'Class {label}', color=f'C{label}', marker='o', s=100)
 
@@ -34,7 +34,7 @@ for position, label in zip(people_position[0:100], class_labels[0:100]):
 # Adding legend and labels
 # Adding legend outside the plot
 plt.legend(title='Class', bbox_to_anchor=(1.05, 1), loc='upper left')
-plt.title('Room with 9 Classes and People\'s Positions (First 100)')
+plt.title(f'Room with {NUM_CLASSES} Classes and People\'s Positions (First 100)')
 plt.xlabel('X-coordinate')
 plt.ylabel('Y-coordinate')
 plt.xlim(0, ROOM_WIDTH)

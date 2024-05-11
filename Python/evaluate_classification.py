@@ -95,11 +95,12 @@ plt.xlim(0, ROOM_WIDTH)
 plt.ylim(0, ROOM_HEIGHT)
 plt.grid(True)
 
-# Creating custom legend
-legend_handles = []
-for label in range(NUM_CLASSES):
-    legend_handles.append(plt.scatter([], [], color=f'C{label}', marker='o', s=100, label=f'Class {label}'))
-plt.legend(handles=legend_handles, title='Clusters', bbox_to_anchor=(1.05, 1), loc='upper left')
+if LEGEND_ON:
+    # Creating custom legend
+    legend_handles = []
+    for label in range(NUM_CLASSES):
+        legend_handles.append(plt.scatter([], [], color=f'C{label}', marker='o', s=100, label=f'Class {label}'))
+    plt.legend(handles=legend_handles, title='Clusters', bbox_to_anchor=(1.05, 1), loc='upper left')
 
 plt.tight_layout()
 plt.savefig('model_evaluation.png')
@@ -112,7 +113,7 @@ print("\tModel used: " + MODEL_NAME_RANDOM_FOREST.split("/")[-1] + ".")
 print("\tDataset used: " + DATA_SET_NAME.split("/")[-1] + ".")
 print("\tNumber of reflections parameter value: " + str(NUMBER_OF_REFLECTIONS) + ".")
 print("\tDataset size: " + str(rssi_values_matrix.shape[0]) + ".")
-print("\tTotal evaluation time : " + str((time.time() - start_time)*10**6) + " s.")
+print("\tTotal evaluation time : " + str(round((time.time() - start_time), 3)) + " s.")
 print("\tTotal model accuracy: " +
       str(round(100 * people_position_color.count("g") / len(people_position_color), 2)) + "%.")
 
