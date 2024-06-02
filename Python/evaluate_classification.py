@@ -88,7 +88,7 @@ for index, position in enumerate(people_position):
     if index % 100 == 0:
         print("[LOG] " + str(index) + "/" + str(people_position.shape[0]) + " samples printed.")
 
-plt.title('How well model predicted output for each cluster (green- valid prediction)')
+
 plt.xlabel('X-coordinate')
 plt.ylabel('Y-coordinate')
 plt.xlim(0, ROOM_WIDTH)
@@ -96,6 +96,7 @@ plt.ylim(0, ROOM_HEIGHT)
 plt.grid(True)
 
 if LEGEND_ON:
+    plt.title('How well model predicted output for each cluster (green- valid prediction)')
     # Creating custom legend
     legend_handles = []
     for label in range(NUM_CLASSES):

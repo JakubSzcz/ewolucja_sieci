@@ -1,25 +1,30 @@
 import numpy as np
 import scipy.io
 
-
 # constants
 ROOM_WIDTH = 5  # width of room
 ROOM_HEIGHT = 5  # height of room
-NUM_CLASSES = 36  # number of squares that room was divided into, must be equal to the square of the natural number
+NUM_CLASSES = 9  # number of squares that room was divided into, must be equal to the square of the natural number
 SQUARE_WIDTH = ROOM_WIDTH / (NUM_CLASSES ** 0.5)  # width of single square
 SQUARE_HEIGHT = ROOM_HEIGHT / (NUM_CLASSES ** 0.5)  # height of single square
 NUMBER_OF_REFLECTIONS = 3  # reflection coefficient
 DATA_SIZE_TO_LOAD = None  # size of data to be loaded from .mat file, if None, load the whole file
 LEGEND_ON = False  # flag to print legend on the plot
-DATA_SET_TYPE = 'valid'  # the type of data to be loaded, possible values: "train" or "valid"
+DATA_SET_TYPE = 'train'  # the type of data to be loaded, possible values: "train", "valid",
+KNN_NEIGH = 10
+# "furniture_train" and "furniture_valid"
+
 
 # models paths to change
+RF_MODEL_FURNITURE = f"../models/forest/furniturev2.joblib"
 RF_MODEL_PATH_K_VAR = f"../models/forest/RF_n=3k,k=var/RF_k={NUMBER_OF_REFLECTIONS}_n=3k.joblib"
 RF_MODEL_PATH_CLASS_VAR = f"../models/forest/RF_n=3k,k=3,class=var/RF_class={NUM_CLASSES}_n=3k_k=3.joblib"
-DATA_SET_NAME = f"../dataSets/{DATA_SET_TYPE}/k={NUMBER_OF_REFLECTIONS},n=20k.mat"
+MODEL_NAME_KNN = f"../models/knn/knn{KNN_NEIGH}.joblib"
+
+DATA_SET_NAME = f"../dataSets/{DATA_SET_TYPE}/k={NUMBER_OF_REFLECTIONS},n=3k.mat"
 
 # Variables to import DO NOT CHANGE
-MODEL_NAME_RANDOM_FOREST = RF_MODEL_PATH_CLASS_VAR
+MODEL_NAME_RANDOM_FOREST = MODEL_NAME_KNN
 MODEL_NAME_RANDOM_NEURAL_NETWORK = ""
 
 
